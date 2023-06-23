@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -16,6 +17,8 @@ public class MainController {
     CredentialRepository credentialRepository;
     @Autowired
     private UserdetailRepository userdetailRepository;
+    @Autowired
+    UsertypelinkRepository usertypelinkRepository;
 
     @GetMapping("/Land")
     public String LandingPage(){
@@ -32,6 +35,8 @@ public class MainController {
         return "dashboard";
     }
 
+
+    @PostMapping("/userdetails")
     public String username(@RequestParam("username") String username,
                            @RequestParam("firstname") String firstname,
                            @RequestParam("lastname") String lastname,
@@ -44,6 +49,7 @@ public class MainController {
         userdetail.setLastname((lastname));
         userdetail.setEmail(email);
         userdetail.setPhone(phone);
+        userdetailRepository.save((userdetail));
         return "dashboard" ;
     }
 
@@ -57,10 +63,30 @@ public class MainController {
             if (matchCredential.get().getPassword().equals(password))
             {   session.setAttribute("username", username);
                 Optional<Userdetail> userdetail= userdetailRepository.findById(username);
+
+                List<Usertypelink> usertypelinks= userdetailRepository.findAll();
+
+                Optional<Usertypelink> usertypelink= usertypelinks.stream().filter(usertypelink1 -> usertypelink1.getUsername().equals(username)).findAny();
+
+
                 if(userdetail.isPresent()){
                     model.addAttribute("userdetail",userdetail.get());
+                    if(usertypelink.get().getType().equals("buyer")){
+                        return "buyer";
+                    } else if (usertypelink.equals("SELLER")) {
+                        return "seller";
+
+                    }
+                    else{
+                        return "LandingPage";
+                    }
+
+
                 }
-                return "dashboard";
+                else{
+                    return "LandingPage";
+                }
+                //return "dashboard";
             }else
             {
                 return "Landingpage";
