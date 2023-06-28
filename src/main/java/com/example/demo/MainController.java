@@ -37,7 +37,7 @@ public class MainController {
 
 
     @PostMapping("/userdetails")
-    public String username(@RequestParam("username") String username,
+    public String userdetail(@RequestParam("username") String username,
                            @RequestParam("firstname") String firstname,
                            @RequestParam("lastname") String lastname,
                            @RequestParam("email") String email,
@@ -64,7 +64,7 @@ public class MainController {
             {   session.setAttribute("username", username);
                 Optional<Userdetail> userdetail= userdetailRepository.findById(username);
 
-                List<Usertypelink> usertypelinks= userdetailRepository.findAll();
+                List<Usertypelink> usertypelinks= usertypelinkRepository.findAll();
 
                 Optional<Usertypelink> usertypelink= usertypelinks.stream().filter(usertypelink1 -> usertypelink1.getUsername().equals(username)).findAny();
 
@@ -73,7 +73,7 @@ public class MainController {
                     model.addAttribute("userdetail",userdetail.get());
                     if(usertypelink.get().getType().equals("buyer")){
                         return "buyer";
-                    } else if (usertypelink.equals("SELLER")) {
+                    } else if (usertypelink.get().getType().equals("SELLER")) {
                         return "seller";
 
                     }
