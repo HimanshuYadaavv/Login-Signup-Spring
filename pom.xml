@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>loginsignupspring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo1</name>
+    <name>loginsignupspring</name>
     <description>loginsignupspring</description>
     <properties>
         <java.version>20</java.version>
